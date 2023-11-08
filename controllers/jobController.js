@@ -53,4 +53,45 @@ module.exports = {
             res.status(500).json(error);
         }    
     },
+
+    getAllJobs: async(req, res) => {
+        const recent = req.query.new;
+
+        try{
+            let jobs;
+
+            if(recent){
+                jobs = await Job.find({},{ceratedAt: 0, updateAt: 0, __V: 0}).sort({ceratedAt: -1}).limit(2);
+            } else{
+                jobs = await Job.find({},{ceratedAt: 0, updateAt: 0, __V: 0});
+            }
+
+            res.status(200).json(jobs);
+        }
+        catch(error) {
+            res.status(500).json(error);
+        }
+    },
+
+    searchJobs: async(req, res) => {
+        try{
+            const results = await Job.aggregate([
+                {
+                  $search: {
+                    index: "jobsearch",
+                    text: {
+                      query: req.params.key,
+                      path: {
+                        wildcard: "*"
+                      }
+                    }
+                  }
+                }
+              ]);
+              res.status(200).json(results);
+        }
+        catch(error) {
+            res.status(500).json(error);
+        }
+    }
 };

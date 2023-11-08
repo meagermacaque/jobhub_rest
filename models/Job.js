@@ -11,6 +11,6 @@ const JobSchema = new mongoose.Schema({
     requirements: {type: Array, required: true},
     imageUrl: {type: String, required: true},
     agentID: {type: String, required: true},
-});
+}, {timestamps: true});
 
 module.exports = mongoose.model('Job', JobSchema);
