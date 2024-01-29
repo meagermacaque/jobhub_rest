@@ -8,6 +8,14 @@ const bodyParser = require('body-parser');
 
 dotenv.config();
 
+// connect to firebase
+const admin = require('firebase-admin');
+const serviceAccount = require('./serviceAccountKey.json');
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+});
+
 mongoose.connect(process.env.MONGO_URL)
     .then(()=> console.log('Connect to V2'))
     .catch((err)=>console.log(err));
