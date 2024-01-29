@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const jobRouter = require('./routes/job');
 const bodyParser = require('body-parser');
+const authRouter = require('./routes/authRouter');
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/api/jobs', jobRouter);
+app.use('/api/', authRouter);
 
 app.get('/', (req, res) =>  res.send('Hello, Express ok?!'));
 app.listen(process.env.PORT || port, () => console.log(`Server is running on port ${process.env.PORT}`));

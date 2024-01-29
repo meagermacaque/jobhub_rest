@@ -13,8 +13,8 @@ module.exports = {
             return res.status(400).json({
                 message: "User already exists"
             });
-        } catch(error) {
-            if(error.code == 'auth/user-not-found'){
+        } catch (error) {
+            if (error.code == 'auth/user-not-found') {
                 try {
                     const userResponse = await admin.auth().createUser({
                         email: user.email,
@@ -32,26 +32,51 @@ module.exports = {
                     })
 
                     await newUser.save();
-                    res.status(201).json({status: true})
+                    res.status(201).json({ status: true })
                 }
-                catch(error){
-                    res.status(500).json({error: 'An error occured while creating account'})
+                catch (error) {
+                    res.status(500).json({ error: 'An error occured while creating account' })
                 }
             }
         }
     },
 
-    loginUser: asyn (req, res) => {
+    loginUser: async (req, res) => {
         try {
-            const user = await User.findOne({email: req.body.email},
-                {__V: 0, createdAt: 0, updatedAt: 0, skills: 0, email: 0});
-            
-                if(!user) {
-                    return res.status(400).json ({
-                        message: 'User not found'
-                    });
-                };
+            const user = await User.findOne({ email: req.body.email },
+                { __V: 0, createdAt: 0, updatedAt: 0, skills: 0, email: 0 });
+
+            if (!user) {
+                return res.status(400).json({
+                    message: 'User not found'
+                });
+            }
+
+            const decryptedPassword = CryptoJS.AES.decrypt(user.password, process.env.SECRET);
+            const depassword = decryptedPassword.toString(CryptoJS.enc.Utf8);
+
+            if (depassword !== req.body.password) {
+                return res.status(400).json({
+                    messaage: 'Invalid Password'
+                })
+            }
+
+            const userToken = jwt.sign({
+                id: user._id,
+                isAdmin: user.isAdmin,
+                isAgent: user.isAgent,
+                uid: user.uid,
+            }, process.env.JWT_SEC, {expiresIn: '21d'});
+
+            const {password, isAdmin, ...others} = user._doc
+
+            res.status(200).json({...others, userToken})
         }
-        catch () {}
+        catch (error) {
+            res.status(500).json({ error: 'An error occured while logging' })
+        }
+
     },
 }
+
+
