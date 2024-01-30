@@ -4,8 +4,8 @@ const port = 3000;
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const jobRouter = require('./routes/job');
+const authRouter = require('./routes/auth');
 const bodyParser = require('body-parser');
-const authRouter = require('./routes/authRouter');
 
 dotenv.config();
 
