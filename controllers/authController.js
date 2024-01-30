@@ -1,5 +1,5 @@
 const User = require('../models/user');
-// change to lower case user
+// file user.js was create as lowercase so sourcecode must be in lowercase as well. 
 const CryptoJS = require('crypto-js');
 const jwt = require('jsonwebtoken');
 const admin = require('firebase-admin');
