@@ -1,4 +1,5 @@
-const User = require('../models/User');
+const User = require('../models/user');
+// change to lower case user
 const CryptoJS = require('crypto-js');
 const jwt = require('jsonwebtoken');
 const admin = require('firebase-admin');
