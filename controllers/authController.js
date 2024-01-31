@@ -23,8 +23,7 @@ module.exports = {
                         emailVerified: false,
                         disabled: false,
                     });
-                    console.log(userResponse.uid);
-
+                    
                     const newUser = await new User({
                         uid: userResponse.uid,
                         username: user.username,
